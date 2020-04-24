@@ -28,9 +28,31 @@ require './assets/includes/header.inc.php';?>
             <!-- edit/delete -->
             <?php if($_COOKIE["client"] != ""){?>
                 <ul class="list-inline">
-                <li class="list-inline-item" tabindex="0" data-toggle="tooltip" title="Edit"><a href=""><i class="far fa-edit"></i></a></li>
-                <li class="list-inline-item" tabindex="0" data-toggle="tooltip" title="Delete"><a href="editor.php?type=delete&table=planning&where=id&is=<?=$column['id']?>"><i class="fas fa-times-circle"></i></a></li>
-                <li class="list-inline-item" tabindex="0" data-toggle="tooltip" title="join"><a href=""><i class="fas fa-user-plus"></i></i></a></li>
+                <!-- check for perms -->
+                <?php if($_COOKIE["client"] == $column['nameExplainer']){?>
+                <li class="list-inline-item" tabindex="0" data-toggle="tooltip" title="Edit"><a href="editor.php?type=edit&tableId=<?=$column['id']?>"><i class="far fa-edit"></i></a></li>
+                <li class="list-inline-item" tabindex="0" data-toggle="tooltip" title="Delete">
+                    <form action="./assets/includes/postHandler.inc.php" method='get'>
+                        <input type="hidden" id="table" name="table" value="planning">
+                        <input type="hidden" id="where" name="where" value="id">
+                        <input type="hidden" id="is" name="is" value="<?=$column['id']?>">
+
+                        <button type="submit" value="Submit" name="delete"><i class="fas fa-times-circle"></i></button>
+                    </form>
+                </li>
+                <!-- join/leave system -->
+                <?php }elseif(strpos($column["participants"], $_COOKIE["client"])!== false){?>
+                    <li class="list-inline-item" tabindex="0" data-toggle="tooltip" title="leave"><a href="editor.php?type=leave&table=planning&id=<?=$column['id']?>"><i class="fas fa-user-minus"></i></i></a></li>
+                <?php }else{?>
+                    <li class="list-inline-item" tabindex="0" data-toggle="tooltip" title="join"><a href="editor.php?type=join&table=planning&id=<?=$column['id']?>"><i class="fas fa-user-plus"></i></i></a></li>
+                <?php }?>
+                <li class="list-inline-item" tabindex="0" data-toggle="tooltip" title="lijst spelers">
+                <a href="#game<?= $column["id"]?>" data-toggle="collapse" aria-expanded="false"><i class="fas fa-users"></i></i></a>
+                <div id="game<?= $column["id"]?>" class="text-dark collapse img-thumbnail">
+                <b>[Lijst van deelnemers]</b> <br>
+                <?=$column["participants"]?>
+                </div>
+                </li>
             </ul>
             <?php }?>
         </div>

@@ -25,9 +25,11 @@
       <?php if($_POST["name"] != ""){
           $name = htmlspecialchars($_POST["name"]);
           setcookie("client", $name);
+          //Refresh to update the page
           header("Refresh:0");
         }else if(isset($_POST["cookie-logout"])){
           setcookie("client", "", time() - 3600);
+          //Refresh to update the page
           header("Refresh:0");
         }
         if($_COOKIE["client"] == ""){
@@ -59,6 +61,7 @@
       </a>
       <div class="dropdown-menu">
         <a class="dropdown-item" href="editor.php?type=new">Add to planning</a>
+        <a class="dropdown-item" href="editor.php?type=newgame">Add game</a>
       </div>
     </li>
     <?php }?>
