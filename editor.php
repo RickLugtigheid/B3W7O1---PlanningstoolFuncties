@@ -8,7 +8,7 @@
     ?>
     <form action="assets/includes/postHandler.inc.php" method="post">
     <div class="form-group w-25 container img-thumbnail mt-5">
-    <label>name of the game: </label><input class="form-control" list="gameName" name="gameName">
+    <label>spel naam: </label><input class="form-control" list="gameName" name="gameName">
         <datalist id="gameName">
         <?php
             $table = manipulateDatabase(connect("school"), "get", "games");
@@ -19,7 +19,7 @@
     </datalist>
         
         <br>
-        <label>start time: </label><input class="form-control" type="datetime-local" name="startTime"><br>
+        <label>start tijd: </label><input class="form-control" type="datetime-local" name="startTime"><br>
         <input type="submit" name="planning-new">
     </div>
     </form>
@@ -28,19 +28,19 @@
         ?>
         <form action="assets/includes/postHandler.inc.php" method="post">
         <div class="form-group w-25 container img-thumbnail mt-5">
-            name of the game: <input class="form-control" name="gameName"> 
+            naam van het spel: <input class="form-control" name="gameName"> 
             <br>
             <textarea class="form-control" rows="4" cols="50" name="description">description...</textarea> <br><br>
-            give an image url: <input class="form-control" name="imgUrl" id="imgUrl"><br>
-            what is the name of your image?: <input class="form-control" name="imgName" id="imgName"><br><br>
-            game webpage link: <input class="form-control" name="url"> <br>
-            game video iframe: <input class="form-control" name="youtube"> <br>
+            afbeelding link: <input class="form-control" name="imgUrl" id="imgUrl"><br>
+            afbeelding naam: <input class="form-control" name="imgName" id="imgName"><br><br>
+            spel webpagina link: <input class="form-control" name="url"> <br>
+            spel video link: <input class="form-control" name="youtube"> <br>
             <br>
-            min players: <input class="form-control" name="maxP"> <br>
-            max players: <input class="form-control" name="minP"> <br>
+            min spelers: <input class="form-control" name="minP"> <br>
+            max spelers: <input class="form-control" name="maxP"> <br>
             <br>
-            explain in minutes: <input class="form-control" name="explainTime"> <br>
-            playtime in minutes: <input class="form-control" name="playTime"> <br>
+            uitleg tijd in minutes: <input class="form-control" name="explainTime"> <br>
+            speeltijd in minutes: <input class="form-control" name="playTime"> <br>
             <input type="submit" name="game-new">
         </div>
         <?php }
@@ -65,7 +65,7 @@
         foreach($tableEdit as $col){
         ?>
         <form action="assets/includes/postHandler.inc.php" method="post">
-        name of the game: <input list="gameName" name="gameName" value="<?=$col['nameGame']?>">
+        spel naam: <input list="gameName" name="gameName" value="<?=$col['nameGame']?>">
         <datalist id="gameName">
         <?php
             $table = manipulateDatabase(connect("school"), "get", "games");
@@ -76,7 +76,7 @@
     </datalist>
     
     <br><!-- value="<= date('Y-m-d\TH:i:sP', $tableEdit['startTime']);?>" -->
-    start time: <input type="datetime-local" name="startTime" > <br>
+    start tijd: <input type="datetime-local" name="startTime" > <br>
     <input type="hidden" id="id" name="id" value="<?=$col['id']?>">
     <input type="submit" name="planning-edit">
     </form>
@@ -88,16 +88,16 @@
         ?>
         <form action="assets/includes/postHandler.inc.php" method="post">
         <input type="hidden" id="id" name="id" value="<?=$col['id']?>">
-        name of the game: <input name="gameName" value="<?=$col['name']?>"> 
+        spel naam: <input name="gameName" value="<?=$col['name']?>"> 
         <br>
         <textarea rows="4" cols="50" name="description"><?=$col['description']?> </textarea><br><br>
-        game webpage link: <input name="url" value="<?=$col['url']?>"> <br>
+        spel webpagina link: <input name="url" value="<?=$col['url']?>"> <br>
         <br>
-        min players: <input name="maxP" value="<?=$col['min_players']?>"> <br>
-        max players: <input name="minP" value="<?=$col['max_players']?>"> <br>
+        min spelers: <input name="maxP" value="<?=$col['min_players']?>"> <br>
+        max spelers: <input name="minP" value="<?=$col['max_players']?>"> <br>
         <br>
-        explain in minutes: <input name="explainTime" value="<?=$col['explain_minutes']?>"> <br>
-        playtime in minutes: <input name="playTime" value="<?=$col['play_minutes']?>"> <br>
+        uitlegtijd in minutes: <input name="explainTime" value="<?=$col['explain_minutes']?>"> <br>
+        speeltijd in minutes: <input name="playTime" value="<?=$col['play_minutes']?>"> <br>
         <input type="submit" name="game-edit">
     <?php }
     elseif($type == "response"){

@@ -24,7 +24,7 @@ require './assets/includes/header.inc.php';?>
                 <li class="list-inline-item"><i class="fa fa-calendar-o" aria-hidden="true"></i>  <?=date("l",strtotime($column['startTime']))?></li>
                 <li class="list-inline-item"><i class="fa fa-clock-o" aria-hidden="true"></i> <?=date("H:i",strtotime($column['startTime']))?></li>
             </ul>
-            <p>Will be explained by: <?=$column['nameExplainer']?>.</p>
+            <p>Wordt uitgelegt door: <?=$column['nameExplainer']?>.</p>
             <!-- edit/delete -->
             <?php if($_COOKIE["client"] != ""){?>
                 <ul class="list-inline">

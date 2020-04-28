@@ -53,7 +53,7 @@
                         for($i = 0; $i <= $count; $i++){
                             $values .= ":value$i, ";
                         }
-    
+                        //                                               to replace the last ,                     same here
                         $stmt = $conn->prepare("INSERT INTO $args[0] (".substr_replace($colls ,"",-2).") VALUES (".substr_replace($values ,"",-2).")");
     
                         //now bind all parameters
@@ -68,12 +68,29 @@
                 break;
                 case "update":
                     if(is_array($args)){
-                        $stmt = $conn->prepare("UPDATE $args[0] SET $args[1]=:val WHERE $args[3]=:is");
-                        //now bind the is var
-                        $stmt->bindParam(":is", $args[4]);
-                        $stmt->bindParam(":val", $args[2]);
-                        $stmt->execute();
-                        //echo "inserted";
+                        if(is_array($args[1]) && is_array($args[2]) && count($args[1]) == count($args[2])){
+                            //make sure we can set all values
+                            for($i = 0; $i <= count($args[1])-1; $i++){
+                                $values .= $args[1][$i]."=:val$i, ";
+                            }
+                            //                                               to replace the last , 
+                            $stmt = $conn->prepare("UPDATE $args[0] SET ".substr_replace($values ,"",-2)." WHERE $args[3]=:is");
+                            //now bind the parameters
+                            for($i = 0; $i <= count($args[1])-1; $i++){
+                                $stmt->bindParam(":val$i", $args[2][$i]);
+                                echo ":val$i  bind=> ". $args[2][$i];
+                            }
+                            $stmt->bindParam(":is", $args[4]);
+                            $stmt->execute();
+
+                        }else{//here we only want to update 1 value
+                            $stmt = $conn->prepare("UPDATE $args[0] SET $args[1]=:val WHERE $args[3]=:is");
+                            //now bind the parameters
+                            $stmt->bindParam(":is", $args[4]);
+                            $stmt->bindParam(":val", $args[2]);
+                            $stmt->execute();
+                            //echo "inserted";
+                        }
                     }else{
                         echo "args in not an array";
                     }
@@ -92,7 +109,9 @@
                 break;
             }
         }catch(Exception $e){
-            header("Location: ../../editor.php?type=response&post=error => &message=".$e);
+            //header("Location: ../../editor.php?type=response&post=error => &message=".$e);
+            echo $e;
+            die();
         }
     }
 ?>

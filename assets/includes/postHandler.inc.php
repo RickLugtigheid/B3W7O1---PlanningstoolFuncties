@@ -6,7 +6,7 @@ if(isset($_POST['planning-new'])){
 
     ///error checking
     if(empty($name)||empty($gameName)||empty($startTime)){
-        header("Location: ../../editor.php?type=response&post=error => &message=emptyfields");
+        header("Location: ../../editor.php?type=response&post=error => &message=niet alle informatie is gegeven");
         exit();
     }
 
@@ -25,7 +25,7 @@ if(isset($_POST['planning-new'])){
     //we are done so we go back
     header("Location: ../../editor.php?type=new&post=succes");
     exit();
-}else if(isset($_POST['game-new'])){
+}elseif(isset($_POST['game-new'])){
     $name = htmlspecialchars($_POST["gameName"]);
     $description = htmlspecialchars($_POST["description"]);
     $imgUrl = htmlspecialchars($_POST["imgUrl"]);
@@ -41,20 +41,28 @@ if(isset($_POST['planning-new'])){
     $playTime = htmlspecialchars($_POST["playTime"]);
 
     ///error checking
-    if(empty($name)||empty($description)||empty($url)||empty($youtube)||empty($maxPlayers)||empty($minPlayers)||empty($explainTime)||empty($playTime)){
-        header("Location: ../../editor.php?type=response&post=error => &message=emptyfields");
+    if(empty($name)||empty($description)||empty($maxPlayers)||empty($minPlayers)||empty($explainTime)||empty($playTime)){
+        header("Location: ../../editor.php?type=response&post=error => &message=niet alle informatie is gegeven");
+        exit();
+    }elseif($maxPlayers <= $minPlayers){
+        header("Location: ../../editor.php?type=response&post=error => &message=max spelers mag niet lager zijn dan min spelers");
         exit();
     }
 
     include './database.inc.php';
     $conn = connect("school");
-
     file_put_contents("../afbeeldingen/".$imgName.".png", file_get_contents($imgUrl));
+
+    //create an embed from yt link
+    preg_match('/[\\?\\&]v=([^\\?\\&]+)/', $youtube, $matches);
+    $id = $matches[1];
+    $embed = '<iframe width="560" height="315" src="https://www.youtube.com/embed/'.$id.'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+
     //insert the info we got into the database
-    manipulateDatabase($conn, "insert", array("games", array("name", "description", "image","url", "youtube", "min_players", "max_players", "play_minutes", "explain_minutes"), array($name, $description, $imgName.".png", $url, $youtube, $minPlayers, $maxPlayers, $playTime, $explainTime)));
+    manipulateDatabase($conn, "insert", array("games", array("name", "description", "image","url", "youtube", "min_players", "max_players", "play_minutes", "explain_minutes"), array($name, $description, $imgName.".png", $url, $embed, $minPlayers, $maxPlayers, $playTime, $explainTime)));
     
     //we are done so we go back
-    header("Location: ../../editor.php?type=newgame&post=succes");
+    header("Location: ../../editor.php?type=response&post=succes");
     exit();
 }elseif(isset($_POST['planning-edit'])){
     include './database.inc.php';
@@ -64,11 +72,11 @@ if(isset($_POST['planning-new'])){
     $newGame = htmlspecialchars($_POST["gameName"]);
     $id = htmlspecialchars($_POST["id"]);
 
-    manipulateDatabase($conn, "update", array("planning", "nameGame", $newGame, "id", $id));
-    manipulateDatabase($conn, "update", array("planning", "startTime", $newST, "id", $id));
+    manipulateDatabase($conn, "update", array("planning", array("nameGame", "startTime"), array($newGame, $newST), "id", $id));
+    //manipulateDatabase($conn, "update", array("planning", "startTime", $newST, "id", $id));
 
-    header("Location: ../../editor.php?type=response&post=succes");
-    exit();
+    // header("Location: ../../editor.php?type=response&post=succes");
+    // exit();
 }elseif(isset($_POST['game-edit'])){
     include './database.inc.php';
     $conn = connect("school");
@@ -87,16 +95,15 @@ if(isset($_POST['planning-new'])){
     $explainTime = htmlspecialchars($_POST["explainTime"]);
     $playTime = htmlspecialchars($_POST["playTime"]);
 
+    if(empty($name) || empty($description)){
+        header("Location: ../../editor.php?type=response&post=error => &message=niet alle informatie is gegeven");
+        exit();
+    }elseif($maxPlayers <= $minPlayers){
+        header("Location: ../../editor.php?type=response&post=error => &message=max spelers mag niet lager zijn dan min spelers");
+        exit();
+    }
 
-    manipulateDatabase($conn, "update", array("games", "name", $name, "id", $id));
-    manipulateDatabase($conn, "update", array("games", "description", $description, "id", $id));
-
-    manipulateDatabase($conn, "update", array("games", "url", $url, "id", $id));
-    manipulateDatabase($conn, "update", array("games", "min_players", $minPlayers, "id", $id));
-    manipulateDatabase($conn, "update", array("games", "max_players", $maxPlayers, "id", $id));
-
-    manipulateDatabase($conn, "update", array("games", "play_minutes", $playTime, "id", $id));
-    manipulateDatabase($conn, "update", array("games", "explain_minutes", $explainTime, "id", $id));
+    manipulateDatabase($conn, "update", array("games", array("name", "description", "url", "min_players", "max_players", "play_minutes", "explain_minutes"), array($name, $description, $url, $minPlayers, $maxPlayers, $playTime, $explainTime), "id", $id));
 
     header("Location: ../../editor.php?type=response&post=succes");
     exit();
@@ -113,7 +120,7 @@ if(isset($_POST['planning-new'])){
     exit();
 }else{
     //send back if this page isn't run by a valid form or is run by typing it into the url
-    header("Location: ../../editor.php?type=response&post=incorrect");
+    header("Location: ../../editor.php?type=response&post=geen toegang");
     exit();
 }
 ?>

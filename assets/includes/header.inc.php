@@ -37,11 +37,11 @@
 
       <form action="index.php" method='post'>
         <input value="" name="name"></input>
-        <button type="submit" name="cookie-user"></button>
+        <button type="submit" name="cookie-user">Log in</button>
 	    </form>	
       <?php }else{?>
           <b class="text-white">welkom <?= $_COOKIE["client"]?></b>
-          <form action="index.php" method='post'><button type="submit" name="cookie-logout">Logout</button></form>	
+          <form action="index.php" method='post'><button type="submit" name="cookie-logout">Log uit</button></form>	
       <?php }?>
     </div>
   </li>
@@ -50,7 +50,7 @@
       <a class="nav-link <?php if($page == "planning"){echo "active";}?>" href="index.php">planning</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link <?php if($page == "games"){echo "active";}?>" href="games.php">games</a>
+      <a class="nav-link <?php if($page == "games"){echo "active";}?>" href="games.php">spellen</a>
     </li>
 
     <!-- Dropdown -->
@@ -60,8 +60,8 @@
         Tools
       </a>
       <div class="dropdown-menu">
-        <a class="dropdown-item" href="editor.php?type=new">Add to planning</a>
-        <a class="dropdown-item" href="editor.php?type=newgame">Add game</a>
+        <a class="dropdown-item" href="editor.php?type=new">Planning toevoegen</a>
+        <a class="dropdown-item" href="editor.php?type=newgame">Spel toevoegen</a>
       </div>
     </li>
     <?php }?>
